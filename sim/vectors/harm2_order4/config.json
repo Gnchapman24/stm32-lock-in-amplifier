@@ -1,0 +1,76 @@
+{
+  "fs": 100000.0,
+  "f_ref": 500.0,
+  "f_actual": 499.9999888241291,
+  "harmonic": 2,
+  "tau": 0.002,
+  "order": 4,
+  "m": 8,
+  "sync": false,
+  "phase0": 0,
+  "delta": 21474836,
+  "alpha_q31": 84204038,
+  "t_iir": 8e-05,
+  "description": "2nd harmonic, 4 poles, M=8",
+  "adc_bits": 12,
+  "n_samples": 4096,
+  "input_tones": [
+    [
+      0.3,
+      499.9999888241291,
+      0.0
+    ],
+    [
+      0.1,
+      999.9999776482582,
+      0.7
+    ]
+  ],
+  "input_noise_v_rms": 0.02,
+  "files": {
+    "adc": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "phase": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "sin": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "cos": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "x_in": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "mix_i": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "mix_q": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "dec_i": {
+      "len": 512,
+      "dtype": "int32"
+    },
+    "dec_q": {
+      "len": 512,
+      "dtype": "int32"
+    },
+    "x": {
+      "len": 512,
+      "dtype": "int32"
+    },
+    "y": {
+      "len": 512,
+      "dtype": "int32"
+    }
+  }
+}

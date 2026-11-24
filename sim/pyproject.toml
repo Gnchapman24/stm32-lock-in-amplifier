@@ -1,0 +1,9 @@
+[project]
+name = "lockin-sim"
+version = "0.0.1"
+description = "Reference model (float + bit-exact Q31) for the STM32 lock-in amplifier"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

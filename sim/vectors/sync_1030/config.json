@@ -1,0 +1,71 @@
+{
+  "fs": 100000.0,
+  "f_ref": 1030.0,
+  "f_actual": 1029.99999653548,
+  "harmonic": 1,
+  "tau": 0.005,
+  "order": 3,
+  "m": 16,
+  "sync": true,
+  "phase0": 0,
+  "delta": 44238163,
+  "alpha_q31": 379000850,
+  "t_iir": 0.0009708737896734094,
+  "description": "sync filter, ~97.1 samples/period, 3 poles",
+  "adc_bits": 12,
+  "n_samples": 4096,
+  "input_tones": [
+    [
+      0.3,
+      1029.99999653548,
+      -1.2
+    ]
+  ],
+  "input_noise_v_rms": 0.05,
+  "files": {
+    "adc": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "phase": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "sin": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "cos": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "x_in": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "mix_i": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "mix_q": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "dec_i": {
+      "len": 41,
+      "dtype": "int32"
+    },
+    "dec_q": {
+      "len": 41,
+      "dtype": "int32"
+    },
+    "x": {
+      "len": 41,
+      "dtype": "int32"
+    },
+    "y": {
+      "len": 41,
+      "dtype": "int32"
+    }
+  }
+}

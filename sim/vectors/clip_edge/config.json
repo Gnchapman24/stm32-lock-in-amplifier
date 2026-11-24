@@ -1,0 +1,71 @@
+{
+  "fs": 100000.0,
+  "f_ref": 2000.0,
+  "f_actual": 2000.0000018626451,
+  "harmonic": 1,
+  "tau": 0.001,
+  "order": 1,
+  "m": 32,
+  "sync": false,
+  "phase0": 2654435769,
+  "delta": 85899346,
+  "alpha_q31": 588090465,
+  "t_iir": 0.00032,
+  "description": "input clipped at both rails, nonzero phase0, 1 pole",
+  "adc_bits": 12,
+  "n_samples": 4096,
+  "input_tones": [
+    [
+      2.0,
+      2000.0000018626451,
+      0.3
+    ]
+  ],
+  "input_noise_v_rms": 0.0,
+  "files": {
+    "adc": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "phase": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "sin": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "cos": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "x_in": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "mix_i": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "mix_q": {
+      "len": 4096,
+      "dtype": "int32"
+    },
+    "dec_i": {
+      "len": 128,
+      "dtype": "int32"
+    },
+    "dec_q": {
+      "len": 128,
+      "dtype": "int32"
+    },
+    "x": {
+      "len": 128,
+      "dtype": "int32"
+    },
+    "y": {
+      "len": 128,
+      "dtype": "int32"
+    }
+  }
+}
