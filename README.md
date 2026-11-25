@@ -63,8 +63,12 @@ excitation's own amplitude and phase cancelling out.
 ├── host/       Python host: serial protocol, sweeps, logging, plots
 ├── hardware/   analog front-end schematics and PCB
 ├── tests/      host-side unit tests
+├── docs/       design decisions log
 └── results/    measured data, plots and write-up
 ```
+
+Why things are built the way they are: [docs/decisions.md](docs/decisions.md).
+Phase 0 simulation results: [results/phase0/SUMMARY.md](results/phase0/SUMMARY.md).
 
 ## Hardware
 

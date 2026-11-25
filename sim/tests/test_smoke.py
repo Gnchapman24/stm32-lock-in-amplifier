@@ -228,7 +228,8 @@ class TestAcCoupling:
     def test_removes_dc(self):
         """Offset input settles to zero."""
         y = signals.ac_coupling(np.full(1000, 1.65), self.FS, 1.0)
-        np.testing.assert_allclose(y, 0.0, atol=1e-12)
+        # Residual is float round-off (~1e-12 on some platforms); 1e-9 V is still far below signal scale.
+        np.testing.assert_allclose(y, 0.0, atol=1e-9)
 
     def test_passes_high_frequency(self):
         """f >> f_corner: gain ~= 1, phase ~= 0 (phase = atan(fc/f) = 1 mrad)."""
