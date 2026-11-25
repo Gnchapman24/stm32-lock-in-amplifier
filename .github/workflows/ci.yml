@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  sim:
+    name: Python model (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]   # oldest supported (pyproject) and a current one
+    defaults:
+      run:
+        working-directory: sim
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: sim/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Unit + end-to-end tests
+        run: pytest -q
+
+      # The vectors are the firmware's contract. Regenerating them must give
+      # byte-identical files; a diff means the model changed without a re-export.
+      - name: Test vectors are reproducible
+        run: |
+          python -m experiments.export_vectors
+          git diff --exit-code -- vectors/
+
+  # Later phases add jobs here:
+  #   firmware: arm-none-eabi-gcc + CMake build of firmware/
+  #   host-c:   hardware-free C modules (nco, demod, meas) built for the PC and
+  #             checked bit-exactly against sim/vectors/
