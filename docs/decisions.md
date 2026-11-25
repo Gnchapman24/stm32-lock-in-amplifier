@@ -546,6 +546,14 @@ All three counters have one writer (the ISR) and one reader (the main loop), so 
 - `serial_flush()` blocks, so it is used only before a reset.
 - Baud check: BRR = 256 · 16 MHz / 921600 = 4444, within the valid range, with an error of 0.01%.
 
+*Refined during implementation:* in host mode, the output of every command line ends with
+a line `#END`. This includes `mode host` and `mode console` themselves, and commands that
+print nothing. The script reads up to the marker instead of guessing with a timeout.
+*Refined during implementation:* the console never waits for the wire. Input is read only
+while the TX ring has at least 1024 bytes free, and at most one command runs per pass. A
+message that still doesn't fit is dropped and counted. If a host-mode reply lost a message,
+`#TRUNC` is sent just before `#END`.
+
 ## D35. Binary frame encoding: little-endian, raw words, CRC-32
 
 **Decision** (refines D24):

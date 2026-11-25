@@ -39,7 +39,40 @@ jobs:
           python -m experiments.export_vectors
           git diff --exit-code -- vectors/
 
-  # Later phases add jobs here:
-  #   firmware: arm-none-eabi-gcc + CMake build of firmware/
-  #   host-c:   hardware-free C modules (nco, demod, meas) built for the PC and
-  #             checked bit-exactly against sim/vectors/
+  firmware:
+    name: Firmware (arm-none-eabi-gcc 14.2) + host C tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firmware
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0             # git describe needs tags/history for FW_VERSION
+
+      # Pinned to the version used locally (D37).
+      - uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '14.2.Rel1'
+
+      - name: Install Ninja
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+
+      - name: Build target firmware
+        run: |
+          cmake --preset target
+          cmake --build --preset target
+
+      - name: Host C unit tests
+        run: |
+          cmake --preset host
+          cmake --build --preset host
+          ctest --preset host
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lockin-firmware
+          path: |
+            firmware/build/target/lockin.elf
+            firmware/build/target/lockin.hex
+            firmware/build/target/lockin.map
