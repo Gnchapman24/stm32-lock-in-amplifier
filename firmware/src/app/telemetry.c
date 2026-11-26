@@ -466,8 +466,7 @@ void tlm_set_status_cb(tlm_status_fn cb, uint32_t period_ms)
     s.status_cb = cb;
     if (period_ms < TLM_PERIOD_MIN_MS) { period_ms = TLM_PERIOD_MIN_MS; }
     if (period_ms > TLM_PERIOD_MAX_MS) { period_ms = TLM_PERIOD_MAX_MS; }
-    s.period_ms = period_ms;
-    tlm_stream(true);
+    s.period_ms = period_ms;   /* the stream stays off until "stream on" */
 }
 
 void tlm_stream(bool on)

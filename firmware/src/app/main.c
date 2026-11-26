@@ -10,6 +10,7 @@
 #include "fault.h"
 #include "gpio.h"
 #include "tick.h"
+#include "sample_clock.h"
 #include "serial_port.h"
 #include "mot.h"
 #include "telemetry.h"
@@ -135,11 +136,30 @@ static void cmd_reset(int argc, char **argv)
     NVIC_SystemReset();
 }
 
+/* sample [start|stop]: run or stop the TIM2 sample clock (D27). Bring-up only:
+ * the boot sequence never starts it. */
+static void cmd_sample(int argc, char **argv)
+{
+    /* Third letter tells them apart: "sta" for start, "sto" for stop. */
+    if (argc >= 2 && argv[1][0] == 's' && argv[1][1] == 't' && argv[1][2] == 'a') {
+        sample_clock_start();
+    } else if (argc >= 2 && argv[1][0] == 's' && argv[1][1] == 't' && argv[1][2] == 'o') {
+        sample_clock_stop();
+    }
+    tlm_printf("sample clock %s: f_s=%lu Hz (design %lu Hz; check PB10 with a frequency counter)\n",
+               sample_clock_running() ? "running" : "stopped",
+               (unsigned long)sample_clock_expected_hz(), (unsigned long)FS_HZ);
+    tlm_printf("TIM2 PSC=%lu ARR=%lu CCR3=%lu CR1=0x%04lX\n",
+               (unsigned long)SAMPLE_TIM->PSC, (unsigned long)SAMPLE_TIM->ARR,
+               (unsigned long)SAMPLE_TIM->CCR3, (unsigned long)SAMPLE_TIM->CR1);
+}
+
 static const tlm_cmd_t k_app_cmds[] = {
     { "*idn?", "identify: maker, model, serial, firmware", cmd_idn   },
     { "clock", "clock tree status and register read-back",  cmd_clock },
     { "fault", "fault [test]  reset cause, last hard fault", cmd_fault },
     { "loop",  "loop [reset]  main-loop pass statistics",   cmd_loop  },
+    { "sample", "sample [start|stop]  TIM2 sample clock on PB10", cmd_sample },
     { "reset", "reboot the MCU",                            cmd_reset },
 };
 
@@ -178,6 +198,7 @@ static void console_init(void)
 
 static const mot_device_t k_devices[] = {
     { "console",   console_init,   tlm_poll       },
+    { "sample",    sample_clock_init, NULL       },
     { "heartbeat", heartbeat_init, heartbeat_poll },
 };
 

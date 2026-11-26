@@ -46,6 +46,16 @@ _Static_assert(SYSCLK_HZ % FS_HZ == 0u, "f_s must divide SYSCLK exactly");
 #define DBG_AUX_PORT    GPIOA           /* PA10 = Arduino D2: spare marker */
 #define DBG_AUX_PIN     10u
 
+/* Sample clock (D27): TIM2 generates f_s and its CH3 PWM output marks every
+ * sample instant on PB10 (Arduino D6), AF1. */
+#define SAMPLE_TIM          TIM2
+#define SAMPLE_PWM_PORT     GPIOB
+#define SAMPLE_PWM_PIN      10u
+#define SAMPLE_PWM_AF       1u
+#define SAMPLE_ARR          (SYSCLK_HZ / FS_HZ - 1u)          /* 1699 */
+#define SAMPLE_CCR3         ((SAMPLE_ARR + 1u) / 2u)          /* 50 % duty */
+_Static_assert(SAMPLE_ARR == 1699u, "TIM2 ARR for 170 MHz / 100 kHz");
+
 /* Set / clear one pin with a single atomic store to BSRR. */
 #define PIN_HIGH(port, pin)  ((port)->BSRR = (1u << (pin)))
 #define PIN_LOW(port, pin)   ((port)->BSRR = (1u << ((pin) + 16u)))

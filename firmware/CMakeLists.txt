@@ -72,6 +72,7 @@ if(CMAKE_CROSSCOMPILING)
         src/bsp/clock.c
         src/bsp/fault.c
         src/bsp/gpio.c
+        src/bsp/sample_clock.c
         src/bsp/serial_port.c
         src/bsp/syscalls.c
         src/bsp/tick.c

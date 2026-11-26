@@ -68,7 +68,7 @@ void tlm_init(uint32_t baud, uint32_t (*now_ms)(void), const char *banner);
 void tlm_poll(void);
 
 void tlm_set_commands(const tlm_cmd_t *table, size_t count);
-void tlm_set_status_cb(tlm_status_fn cb, uint32_t period_ms);  /* stream starts ON */
+void tlm_set_status_cb(tlm_status_fn cb, uint32_t period_ms);  /* stream starts OFF */
 void tlm_stream(bool on);
 
 /* Console (false) or host (true) mode; see above. Also the "mode" command. */
