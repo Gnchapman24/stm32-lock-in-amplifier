@@ -8,8 +8,8 @@
 #include <stdint.h>
 
 typedef enum {
-    CLOCK_SRC_HSI = 0,      /* internal 16 MHz RC, +-1 %  (bring-up default) */
-    CLOCK_SRC_HSE = 1,      /* external 24 MHz crystal X3                    */
+    CLOCK_SRC_HSI = 0,      /* internal 16 MHz RC, +-1 %  (fallback)         */
+    CLOCK_SRC_HSE = 1,      /* external 24 MHz crystal X3 (build default)    */
 } clock_src_t;
 
 /* Which step of clock_init() failed. CLOCK_OK means SYSCLK = 170 MHz. */

@@ -27,7 +27,7 @@ changes, add a new entry that supersedes the old one, and leave the old one in p
 | [D16](#d16-firmware-structure-dsp-in-the-dma-interrupt-machine-on-tether-main-loop) | DSP in the DMA interrupt, Machine-on-Tether main loop | Planned (Phase 1–2) |
 | [D17](#d17-cmsis--ll-not-hal-cmake--arm-none-eabi-gcc) | CMSIS + LL (not HAL); CMake + arm-none-eabi-gcc | Planned (Phase 1) |
 | [D18](#d18-host-link-lpuart1-at-921600-baud-through-the-st-link) | Host link: LPUART1 at 921600 baud through the ST-LINK | Planned (Phase 1) |
-| [D19](#d19-system-clock-hsi-for-bring-up-then-hse-170-mhz-via-pll-in-boost-mode) | System clock: HSI for bring-up, then HSE; 170 MHz via PLL in boost mode | Planned (Phase 1) |
+| [D19](#d19-system-clock-hsi-for-bring-up-then-hse-170-mhz-via-pll-in-boost-mode) | System clock: HSI for bring-up, then HSE; 170 MHz via PLL in boost mode | Implemented (Nucleo; HSE default since 2026-11-25) |
 | [D20](#d20-adc-clock-hclk4--425-mhz-synchronous-with-a-sampling-time-cap) | ADC clock: HCLK/4 = 42.5 MHz, synchronous, with a sampling-time cap | Planned (Phase 1) |
 | [D21](#d21-block-size-b--64) | Block size B = 64 | Planned (Phase 1) |
 | [D22](#d22-uart-interrupt-above-the-dsp-and-fifo-enabled) | UART interrupt above the DSP; FIFO enabled | Planned (Phase 1) |
@@ -35,7 +35,7 @@ changes, add a new entry that supersedes the old one, and leave the old one in p
 | [D24](#d24-raw-data-by-burst-capture-in-checksummed-binary-frames-text-commands) | Raw data by burst capture in checksummed binary frames; text commands | Planned (Phase 1) |
 | [D25](#d25-nco-and-dac-refill-in-the-adc-dma-isr) | NCO and DAC refill in the ADC DMA ISR | Planned (Phase 1) |
 | [D26](#d26-pin-assignment-adc-inputs-on-pa0-and-pa1-dac-on-pa4) | Pin assignment: ADC inputs on PA0 and PA1, DAC on PA4 | Planned (Phase 1) |
-| [D27](#d27-tim2-is-the-sample-clock-with-the-trigger-visible-on-pb10) | TIM2 is the sample clock, with the trigger visible on PB10 | Planned (Phase 1) |
+| [D27](#d27-tim2-is-the-sample-clock-with-the-trigger-visible-on-pb10) | TIM2 is the sample clock, with the trigger visible on PB10 | Implemented (Nucleo, PB10 counted; ADC/DAC trigger not wired yet) |
 | [D28](#d28-debug-pins-pa9-for-isr-busy-pa10-spare) | Debug pins: PA9 for ISR busy, PA10 spare | Planned (Phase 1) |
 | [D29](#d29-adc-sampling-time-925-cycles) | ADC sampling time 92.5 cycles | Planned (Phase 1) |
 | [D30](#d30-dac-buffered-hfsel-set-cordic-sine-defined-code-mapping) | DAC: buffered, HFSEL set, CORDIC sine, defined code mapping | Planned (Phase 1) |
@@ -314,6 +314,13 @@ the project is meant to demonstrate.
 - HSE is the external 24 MHz crystal X3 by default (UM2505 Table 12, p. 26; SB25/SB26 ON, SB27 OFF). The ST-LINK MCO is not used for HSE.
 - PLL values for 170 MHz from 24 MHz are M = 6, N = 85, R = 2. HSI16 gives 170 MHz with M = 4, N = 85, R = 2. Both give a 4 MHz PLL input (allowed 2.66–16 MHz) and a 340 MHz VCO (allowed 96–344 MHz in Range 1), per the PLL characteristics in DS12288.
 - The AHB ÷2 step above briefly runs the core at 85 MHz. It only happens once, at boot.
+
+**Result (2026-11-25, Nucleo):** f_s on PB10 was counted with an Arduino UNO over a 1 s gate (`tools/freq_counter`).
+- HSE on: 100 091.6 to 100 092.0 Hz, steady. The 0.4 Hz step is the counter's resolution.
+- HSI16: 100 110 to 100 130 Hz, drifting.
+- A 24 MHz crystal is good to tens of ppm, so the steady +918 ppm is the UNO's ceramic resonator running slow. Against HSE, HSI16 was about +200 to +400 ppm: well within ±1%, but drifting with temperature.
+- HSE is now the build default (`LOCKIN_USE_HSE=ON`), with HSI16 as the fallback.
+- Not yet checked against an independent reference: HSE's absolute error is assumed from the crystal's tolerance, not measured.
 
 ## D20. ADC clock: HCLK/4 = 42.5 MHz, synchronous, with a sampling-time cap
 

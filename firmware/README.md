@@ -15,7 +15,10 @@ cmake --preset host && cmake --build --preset host && ctest --preset host   # PC
 
 - `flash` uses `STM32_Programmer_CLI`. CMake looks for it on PATH and inside an
   STM32CubeIDE install. If it isn't found, pass `-DSTM32_PROGRAMMER_CLI=<path>`.
-- `-DLOCKIN_USE_HSE=ON` clocks the PLL from the 24 MHz crystal instead of HSI16 (D19).
+- The PLL runs from the 24 MHz HSE crystal by default. `-DLOCKIN_USE_HSE=OFF` uses HSI16
+  instead (D19). If the crystal doesn't start, the firmware falls back to HSI16 and the
+  `clock` command says so. The option is cached: an existing build directory keeps its
+  old value until you reconfigure with the flag.
 - `-DLOCKIN_NO_PLL=ON` never starts the PLL and runs everything at 16 MHz. This is for
   the first bring-up steps.
 - After a HardFault the next boot also stays at 16 MHz (safe mode), so the console can

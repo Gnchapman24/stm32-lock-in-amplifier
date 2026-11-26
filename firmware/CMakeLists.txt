@@ -36,7 +36,9 @@ set(LIB_SOURCES
 
 if(CMAKE_CROSSCOMPILING)
     # ------------------------------------------------------------------ target
-    option(LOCKIN_USE_HSE "Clock the PLL from the 24 MHz HSE crystal instead of HSI16 (D19)" OFF)
+    # HSE is the default since bring-up (D19): HSI16 measured about +200..+400 ppm and drifting.
+    # If the crystal fails to start, clock_init() falls back to HSI16 and reports it.
+    option(LOCKIN_USE_HSE "Clock the PLL from the 24 MHz HSE crystal (OFF = HSI16, D19)" ON)
     option(LOCKIN_NO_PLL  "Bring-up: stay on HSI16 at 16 MHz, never start the PLL" OFF)
 
     # Firmware version from git, fixed at configure time (re-run cmake to update).
