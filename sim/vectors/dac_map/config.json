@@ -1,0 +1,31 @@
+{
+  "kind": "dac_map",
+  "fs": 100000.0,
+  "f_ref": 1234.5,
+  "phase0": 1073741824,
+  "n_sweep": 4096,
+  "amp": 1600,
+  "dac_mid": 2048,
+  "edge_sin": [
+    -2147483648,
+    2147483647,
+    0,
+    1,
+    -1,
+    16777216,
+    -16777216,
+    16777215,
+    -16777217
+  ],
+  "description": "Q31 sine sweep + edge values -> 12-bit DAC codes",
+  "files": {
+    "sin": {
+      "len": 4105,
+      "dtype": "int32"
+    },
+    "dac": {
+      "len": 4105,
+      "dtype": "int32"
+    }
+  }
+}

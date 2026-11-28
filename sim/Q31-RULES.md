@@ -101,3 +101,10 @@ of the input (E5: exactly 1 ADC LSB for α = 2⁻²⁰).
 little-endian int32 `.bin` per stage (`adc, phase, sin, cos, x_in, mix_i, mix_q,
 dec_i, dec_q, x, y`). `phase` is the uint32 bit pattern. The output is
 deterministic: any diff in git means the model changed.
+
+A case whose `config.json` has a `"kind"` key isn't a pipeline run:
+
+- `"kind": "dac_map"` (D30): `sin.bin` is the input (an NCO sine sweep followed by
+  edge values), and `dac.bin` holds the 12-bit codes
+  `2048 + ((sin · amp + 2³⁰) >> 31)`, which round half up like section 1.
+  `firmware/tests/test_dac_map.c` checks the C mapping against it.

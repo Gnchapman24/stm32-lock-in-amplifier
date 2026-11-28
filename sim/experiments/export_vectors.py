@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-from lockin import pipeline, vectors
+from lockin import dac, pipeline, q31, vectors
 from experiments.common import adc_codes
 
 OUT = Path(__file__).resolve().parents[1] / "vectors"
@@ -29,6 +29,18 @@ CASES = {
 }
 
 
+# DAC code mapping (D30). Not a pipeline case: config.json has "kind": "dac_map",
+# and sin.bin is the INPUT (on hardware it comes from the CORDIC, which the model
+# can't reproduce bit-exactly, D12). The sine sweep is followed by hand-picked
+# edge values: full scale, zero, and the exact rounding halves at +-2^24.
+DAC_CASE = "dac_map"
+DAC_CFG = {"kind": "dac_map", "fs": 100_000.0, "f_ref": 1234.5, "phase0": 0x40000000,
+           "n_sweep": N, "amp": dac.DAC_AMP, "dac_mid": dac.DAC_MID,
+           "edge_sin": [q31.Q31_MIN, q31.Q31_MAX, 0, 1, -1,
+                        1 << 24, -(1 << 24), (1 << 24) - 1, -(1 << 24) - 1],
+           "description": "Q31 sine sweep + edge values -> 12-bit DAC codes"}
+
+
 def main():
     for i, (name, (cfg, comps, noise, desc)) in enumerate(CASES.items()):
         tones = [(a, cfg.f_actual if f is None else 2 * cfg.f_actual, p) for a, f, p in comps]
@@ -39,6 +51,10 @@ def main():
                     input_tones=[list(t) for t in tones], input_noise_v_rms=noise)
         d = vectors.export(name, meta, r.stages, out_dir=OUT)
         print(f"{name:14s} -> {d}  ({len(r.x)} outputs)")
+
+    st = dac.vector_stages(DAC_CFG)
+    d = vectors.export(DAC_CASE, DAC_CFG, st, out_dir=OUT)
+    print(f"{DAC_CASE:14s} -> {d}  ({len(st['dac'])} codes)")
 
 
 if __name__ == "__main__":
