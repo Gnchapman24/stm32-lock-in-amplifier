@@ -40,6 +40,17 @@ static int g_test_failures;
         }                                                                    \
     } while (0)
 
+#define CHECK_EQ_I32(actual, expected)                                       \
+    do {                                                                     \
+        int32_t a_ = (int32_t)(actual), e_ = (int32_t)(expected);            \
+        g_test_checks++;                                                     \
+        if (a_ != e_) {                                                      \
+            g_test_failures++;                                               \
+            fprintf(stderr, "%s:%d: %s == %ld, expected %ld\n",              \
+                    __FILE__, __LINE__, #actual, (long)a_, (long)e_);        \
+        }                                                                    \
+    } while (0)
+
 #define TEST_SUMMARY()                                                       \
     (printf("%d checks, %d failed\n", g_test_checks, g_test_failures),       \
      g_test_failures == 0 ? 0 : 1)

@@ -39,10 +39,18 @@ def test_committed_vectors_match_model(case):
     """Re-run the model on each exported input: every stage must match bit-exactly.
 
     Fails if the model changed without re-running experiments.export_vectors.
+    Cases without a "kind" key are full pipeline runs.
     """
     from lockin import pipeline
     d = VEC_DIR / case
     meta = json.loads((d / "config.json").read_text())
+    if meta.get("kind") == "dac_map":
+        from lockin import dac
+        for stage, got in dac.vector_stages(meta).items():
+            np.testing.assert_array_equal(got, vectors.read_bin(d / f"{stage}.bin"),
+                                          err_msg=f"{case}/{stage}")
+        return
+    assert "kind" not in meta, f"{case}: unknown vector kind {meta['kind']!r}"
     fields = {k: meta[k] for k in ("fs", "f_ref", "harmonic", "tau", "order", "m", "sync", "phase0")}
     cfg = pipeline.Config(**fields)
     assert cfg.delta == meta["delta"] and cfg.alpha_q31 == meta["alpha_q31"]

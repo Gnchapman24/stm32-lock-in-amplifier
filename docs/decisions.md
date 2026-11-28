@@ -404,6 +404,8 @@ All three counters have one writer (the ISR) and one reader (the main loop), so 
 
 **Cost:** The ISR does a little more work, but it is already bounded by the deadline in D23.
 
+**Bring-up note (Phase 1, step B4, decided 2026-11-25):** The DAC is brought up before the ADC ISR exists. In B4, `dac_buf[2B]` is filled once, before TIM2 starts, and circular DMA replays it with no ISR and no refill. This only works if the buffer holds a whole number of cycles: 2B = 128 samples, so f = k · f_s/128 = k × 781.25 Hz and Δ = k · 2²⁵ exactly (1 ≤ k ≤ 63, since k = 64 is Nyquist), which brings the phase back to its start after 128 steps. This decision applies unchanged from Stage C, when the refill moves into the ADC ISR and any Δ becomes possible.
+
 ---
 
 ## D26. Pin assignment: ADC inputs on PA0 and PA1, DAC on PA4
